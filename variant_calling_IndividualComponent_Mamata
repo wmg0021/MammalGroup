@@ -1,0 +1,63 @@
+
+#sorted bam files obtained from standard pipeline is used here.
+
+#name of the files are named same as in my working folder, the names so names and path may have to change accordingly for reproducing the results from this pipeline.
+
+
+#mark duplicates using picard tools
+
+module load picard/2.26.2
+picard MarkDuplicates REMOVE_DUPLICATES=true INPUT=SRR11535186_sorted.bam OUTPUT=SRR11535186_sorted_marked.bam METRICS_FILE=markduplicates_metrics CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT
+picard MarkDuplicates REMOVE_DUPLICATES=true INPUT=SRR11535187_sorted.bam OUTPUT=SRR11535187_sorted_marked.bam METRICS_FILE=markduplicates_metrics CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT
+picard MarkDuplicates REMOVE_DUPLICATES=true INPUT=SRR11535188_sorted.bam OUTPUT=SRR11535188_sorted_marked.bam METRICS_FILE=markduplicates_metrics CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT
+picard MarkDuplicates REMOVE_DUPLICATES=true INPUT=SRR11535189_sorted.bam OUTPUT=SRR11535189_sorted_marked.bam METRICS_FILE=markduplicates_metrics CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT
+picard MarkDuplicates REMOVE_DUPLICATES=true INPUT=SRR11535192_sorted.bam OUTPUT=SRR11535192_sorted_marked.bam METRICS_FILE=markduplicates_metrics CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT
+picard MarkDuplicates REMOVE_DUPLICATES=true INPUT=SRR11535193_sorted.bam OUTPUT=SRR11535193_sorted_marked.bam METRICS_FILE=markduplicates_metrics CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT
+
+module load samtools/1.18
+
+samtools index SRR11535192_sorted_marked.bam
+samtools index SRR11535193_sorted_marked.bam
+samtools index SRR11535189_sorted_marked.bam
+samtools index SRR11535188_sorted_marked.bam
+samtools index SRR11535187_sorted_marked.bam
+samtools index SRR11535186_sorted_marked.bam
+samtools faidx rat.fna
+
+#!/bin/bash
+#
+# load the Bcftools environment
+source /apps/profiles/modules_asax.sh.dyn
+module load bcftools/1.13
+# Place bcftools commands here
+
+bcftools mpileup -f rat.fna SRR11535193_sorted_marked.bam > 193.pileup
+bcftools mpileup -f rat.fna SRR11535192_sorted_marked.bam > 192.pileup
+bcftools mpileup -f rat.fna SRR11535186_sorted_marked.bam > 186.pileup
+bcftools mpileup -f rat.fna SRR11535187_sorted_marked.bam > 187.pileup
+bcftools mpileup -f rat.fna SRR11535188_sorted_marked.bam > 188.pileup
+bcftools mpileup -f rat.fna SRR11535189_sorted_marked.bam > 189.pileup
+
+
+#!/bin/bash
+#
+# load the Bcftools environment
+source /apps/profiles/modules_asax.sh.dyn
+module load bcftools/1.13
+# Place bcftools commands here
+bcftools call -mv -O v -o 192.vcf 192.pileup
+bcftools call -mv -O v -o 193.vcf 193.pileup
+bcftools call -mv -O v -o 186.vcf 186.pileup
+bcftools call -mv -O v -o 187.vcf 187.pileup
+bcftools call -mv -O v -o 188.vcf 188.pileup
+bcftools call -mv -O v -o 189.vcf 189.pileup
+
+
+module load gatk
+ gatk VariantFiltration -R rat.fna -O 186_filter.vcf --variant 186.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 187_filter.vcf --variant 187.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 188_filter.vcf --variant 188.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 189_filter.vcf --variant 189.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 192_filter.vcf --variant 192.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 193_filter.vcf --variant 193.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
+
