@@ -1,10 +1,10 @@
 
-#sorted bam files obtained from standard pipeline is used here.
+#sorted bam files obtained from the standard pipeline are used here.
 
-#name of the files are named same as in my working folder, the names so names and path may have to change accordingly for reproducing the results from this pipeline.
+# names of the files are the same as in my working folder, so names and paths may have to change accordingly to reproduce the results from this pipeline.
 
 
-#mark duplicates using picard tools
+#mark duplicates using Picard tools
 
 module load picard/2.26.2
 picard MarkDuplicates REMOVE_DUPLICATES=true INPUT=SRR11535186_sorted.bam OUTPUT=SRR11535186_sorted_marked.bam METRICS_FILE=markduplicates_metrics CREATE_INDEX=true VALIDATION_STRINGENCY=LENIENT
@@ -54,10 +54,10 @@ bcftools call -mv -O v -o 189.vcf 189.pileup
 
 
 module load gatk
- gatk VariantFiltration -R rat.fna -O 186_filter.vcf --variant 186.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
- gatk VariantFiltration -R rat.fna -O 187_filter.vcf --variant 187.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
- gatk VariantFiltration -R rat.fna -O 188_filter.vcf --variant 188.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
- gatk VariantFiltration -R rat.fna -O 189_filter.vcf --variant 189.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
- gatk VariantFiltration -R rat.fna -O 192_filter.vcf --variant 192.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
- gatk VariantFiltration -R rat.fna -O 193_filter.vcf --variant 193.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 15" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 186_filter.vcf --variant 186.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 50" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 187_filter.vcf --variant 187.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 50" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 188_filter.vcf --variant 188.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 50" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 189_filter.vcf --variant 189.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 50" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 192_filter.vcf --variant 192.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 50" --filter-name pass_filter
+ gatk VariantFiltration -R rat.fna -O 193_filter.vcf --variant 193.vcf --filter-expression "FQ < 0.025 && MQ > 50 && QUAL > 100 && DP > 50" --filter-name pass_filter
 
